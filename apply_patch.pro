@@ -21,13 +21,30 @@ Pro apply_patch, in_ht_file, in_hv_file, out_ht_file, xdim, ydim, win_size
 	ht_win = fltarr(win_size*2+1,win_size*2+1)
 	hv_win = fltarr(win_size*2+1,win_size*2+1)
 
-	;copy first win_size lines, we are not going to patch this region
+	print, 'Patching...'
+	;copy first win_size lines, we patch but the pixel may not be the center of window
+	readu, in_ht_lun, in_ht_image
+	readu, in_hv_lun, in_hv_image
+
 	for j=0ULL, win_size-1 do begin
-		readu, in_ht_lun, out_line
+		out_line[*] = in_ht_image[*,j]
+		hv_line[*] = in_hv_image[*,j]
+		
+		index = where((out_line eq 0) and (hv_line ge thresh), count)
+
+		if(count gt 0) then begin
+			for i=0, count-1 do begin
+				i_ind = index[i]
+				i_ind_min = ((i_ind-win_size > 0) < (xdim-win_size*2-1))
+				i_ind_max = ((i_ind+win_size > win_size*2) < (xdim-1))
+				ht_win[*] = in_ht_image[i_ind_min:i_ind_max,*]
+				hv_win[*] = in_hv_image[i_ind_min:i_ind_max,*]
+
+				out_line[i_ind] = patch(ht_win,hv_win,hv_win[win_size,win_size])
+			endfor
+		endif
 		writeu, out_lun, out_line
 	endfor
-
-	print, 'Patching...'
 
 	for j=win_size,ydim-win_size-1 do begin
 		if (j mod 10000 eq 0) then print, j
@@ -46,8 +63,10 @@ Pro apply_patch, in_ht_file, in_hv_file, out_ht_file, xdim, ydim, win_size
 		if(count gt 0) then begin
 			for i=0, count-1 do begin
 				i_ind = index[i]
-				ht_win[*] = in_ht_image[i_ind-win_size:i_ind+win_size,*]
-				hv_win[*] = in_hv_image[i_ind-win_size:i_ind+win_size,*]
+				i_ind_min = ((i_ind-win_size > 0) < (xdim-win_size*2-1))
+				i_ind_max = ((i_ind+win_size > win_size*2) < (xdim-1))
+				ht_win[*] = in_ht_image[i_ind_min:i_ind_max,*]
+				hv_win[*] = in_hv_image[i_ind_min:i_ind_max,*]
 
 				out_line[i_ind] = patch(ht_win,hv_win,hv_win[win_size,win_size])
 			endfor
@@ -56,11 +75,27 @@ Pro apply_patch, in_ht_file, in_hv_file, out_ht_file, xdim, ydim, win_size
 		writeu, out_lun, out_line
 	endfor
 		
-	;copy the last win_size lines
-	point_lun, in_ht_lun, (ydim-win_size)*xdim*4ULL
+	;patch the last win_size lines, since we read the block in the last step of previous loop, we don't need to read input anymore
 	for j=0ULL, win_size-1 do begin
-		readu, in_ht_lun, out_line
+		out_line[*] = in_ht_image[*,win_size+j+1]
+		hv_line[*] = in_hv_image[*,win_size+j+1]
+
+		index = where((out_line eq 0) and (hv_line ge thresh), count)
+
+		if(count gt 0) then begin
+			for i=0, count-1 do begin
+				i_ind = index[i]
+				i_ind_min = ((i_ind-win_size > 0) < (xdim-win_size*2-1))
+				i_ind_max = ((i_ind+win_size > win_size*2) < (xdim-1))
+				ht_win[*] = in_ht_image[i_ind_min:i_ind_max,*]
+				hv_win[*] = in_hv_image[i_ind_min:i_ind_max,*]
+
+				out_line[i_ind] = patch(ht_win,hv_win,hv_win[win_size,win_size])
+			endfor
+		endif
+
 		writeu, out_lun, out_line
+
 	endfor
 
 	free_lun, in_ht_lun, in_hv_lun, out_lun
