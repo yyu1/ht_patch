@@ -1,0 +1,7 @@
+in_ht_file = '/Volumes/Global_250m/output/afr/v3/3.2sec/maxent_afr_hlorey_3.2sec_v1_slpcorr.flt'
+in_hv_file = '/Volumes/ALOS_01/global_alos_2007/afr/afr_3.2sec_HV_mosaic'
+out_file = '/Volumes/Global_250m/output/afr/v3/3.2sec/maxent_afr_hlorey_3.2sec_v1_slpcorr_patched.flt'
+xdim = 85500ULL
+ydim = 90000ULL
+win_size = 50
+apply_patch_sqr, in_ht_file, in_hv_file, out_file, xdim, ydim, win_size
