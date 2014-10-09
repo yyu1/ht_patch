@@ -12,7 +12,7 @@ Function patch, in_ht, in_hv, in_my_hv
 	index = where(in_ht gt 0, count)
 
 	if (count gt 0) then begin
-		return, mean(in_ht[index]) * in_my_hv / mean(in_hv[index]) ; scale using variance of hv on mean of height
+		return, mean(in_ht[index]) * ((in_my_hv / mean(in_hv[index]) - 1)*0.5+1) ; scale using variance of hv on mean of height
 	endif
 
 	return, 0  ; if we get to here, no height values to help with interpolation, so return 0
