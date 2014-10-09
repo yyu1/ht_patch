@@ -1,0 +1,7 @@
+in_ht_file = '/Volumes/Global_250m/output/sam/v3/3.2sec/maxent_sam_hlorey_3.2sec_method5_fuzzy2_slpcorr.flt'
+in_hv_file = '/Volumes/Global_250m/alos/3.2sec/sam/sam_3.2sec_HV_slice.flt'
+out_file = '/Volumes/Global_250m/output/sam/v3/3.2sec/maxent_sam_hlorey_3.2sec_method5_fuzzy2_slpcorr_patched50.flt'
+xdim = 39000ULL
+ydim = 12000ULL
+win_size = 50
+apply_patch, in_ht_file, in_hv_file, out_file, xdim, ydim, win_size
