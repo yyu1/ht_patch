@@ -6,7 +6,7 @@ Pro apply_patch, in_ht_file, in_hv_file, out_ht_file, xdim, ydim, win_size
 
 	COMMON setting, thresh   ;common block for values of settings
 
-	thresh = 0.051  ; Use 0.051 for HV threshold	
+	thresh = 0.045  ; Use 0.04 for HV threshold	
 
 	in_ht_image = fltarr(xdim,win_size*2+1)
 	in_hv_image = fltarr(xdim,win_size*2+1)
@@ -46,7 +46,7 @@ Pro apply_patch, in_ht_file, in_hv_file, out_ht_file, xdim, ydim, win_size
 		writeu, out_lun, out_line
 	endfor
 
-	for j=win_size,ydim-win_size-1 do begin
+	for j=ulong(win_size),ydim-win_size-1 do begin
 		if (j mod 10000 eq 0) then print, j
 		;set file pointer
 		point_lun, in_ht_lun, (j-win_size)*xdim*4ULL
