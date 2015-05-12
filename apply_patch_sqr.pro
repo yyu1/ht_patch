@@ -10,7 +10,7 @@ Pro apply_patch_sqr, in_ht_file, in_hv_file, out_ht_file, xdim, ydim, win_size
 
 	thresh = 0.04  ; Use 0.04 for HV threshold	
 
-	max_ht = 60
+	max_ht = 65
 
 	in_ht_image = fltarr(xdim,win_size*2+1)
 	in_hv_image = fltarr(xdim,win_size*2+1)
