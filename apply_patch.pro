@@ -6,7 +6,9 @@ Pro apply_patch, in_ht_file, in_hv_file, out_ht_file, xdim, ydim, win_size
 
 	COMMON setting, thresh   ;common block for values of settings
 
-	thresh = 0.045  ; Use 0.04 for HV threshold	
+	thresh = 0.04  ; Use 0.04 for HV threshold	
+
+	max_ht = 60
 
 	in_ht_image = fltarr(xdim,win_size*2+1)
 	in_hv_image = fltarr(xdim,win_size*2+1)
@@ -43,7 +45,8 @@ Pro apply_patch, in_ht_file, in_hv_file, out_ht_file, xdim, ydim, win_size
 				out_line[i_ind] = patch(ht_win,hv_win,hv_win[win_size,win_size])
 			endfor
 		endif
-		writeu, out_lun, out_line
+		writeu, out_lun, out_line < max_ht
+		;writeu, out_lun, out_line
 	endfor
 
 	for j=ulong(win_size),ydim-win_size-1 do begin
@@ -72,7 +75,8 @@ Pro apply_patch, in_ht_file, in_hv_file, out_ht_file, xdim, ydim, win_size
 			endfor
 		endif
 
-		writeu, out_lun, out_line
+		writeu, out_lun, out_line < max_ht
+		;writeu, out_lun, out_line
 	endfor
 		
 	;patch the last win_size lines, since we read the block in the last step of previous loop, we don't need to read input anymore
@@ -94,7 +98,8 @@ Pro apply_patch, in_ht_file, in_hv_file, out_ht_file, xdim, ydim, win_size
 			endfor
 		endif
 
-		writeu, out_lun, out_line
+		writeu, out_lun, out_line < max_ht
+		;writeu, out_lun, out_line
 
 	endfor
 
